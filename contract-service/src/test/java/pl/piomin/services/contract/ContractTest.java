@@ -51,17 +51,19 @@ public class ContractTest {
 	
 	@Test
 	public void testTransactionFeeContract() throws Exception {
-		Transactionfee contract = Transactionfee.deploy(web3j, credentials, GAS_PRICE, GAS_LIMIT).send();
+		Transactionfee contract = Transactionfee.deploy(web3j, credentials, GAS_PRICE, GAS_LIMIT, BigInteger.valueOf(2L)).send();
 		EthAccounts accounts = web3j.ethAccounts().send();
 		EthGetBalance balance = web3j.ethGetBalance(accounts.getAccounts().get(1), DefaultBlockParameterName.LATEST).send();
     	LOGGER.info("Sending to: account={}, balance={}", accounts.getAccounts().get(1), balance.getBalance().longValue());
     	for (int i=0; i<5; i++) {
-	    	TransactionReceipt tr = contract.send(accounts.getAccounts().get(1), AMOUNT).send();
+	    	TransactionReceipt tr = contract.sendTrx(accounts.getAccounts().get(1), AMOUNT).send();
 	    	LOGGER.info("Transaction receipt: from={}, to={}, gas={}", tr.getFrom(), tr.getTo(), tr.getGasUsed().intValue());
 	    	balance = web3j.ethGetBalance(accounts.getAccounts().get(1), DefaultBlockParameterName.LATEST).send();
 	    	LOGGER.info("Sent to: account={}, balance={}", accounts.getAccounts().get(1), balance.getBalance().longValue());
 	    	LOGGER.info("Contract: account={}, balance={}", accounts.getAccounts().get(1), contract.balances(accounts.getAccounts().get(1)).send().longValue());
 	    	LOGGER.info("Contract To: account={}, balance={}", tr.getTo(), contract.balances(tr.getTo()).send().longValue());
+	    	balance = web3j.ethGetBalance(tr.getTo(), DefaultBlockParameterName.LATEST).send();
+	    	LOGGER.info("Contract To 2: account={}, balance={}", accounts.getAccounts().get(1), balance.getBalance().longValue());
     	}
 	}
 	
