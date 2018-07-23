@@ -22,6 +22,7 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthCoinbase;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
@@ -35,8 +36,9 @@ import pl.piomin.services.contract.model.Transactionfee;
 public class ContractController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ContractController.class);
-    public static final BigInteger GAS_PRICE = BigInteger.valueOf(20_000_000_000L);
+    public static final BigInteger GAS_PRICE = BigInteger.valueOf(1L);
     public static final BigInteger GAS_LIMIT = BigInteger.valueOf(500_000L);
+    int ownerId = 1;
     
     @Autowired
     Web3j web3j;
@@ -53,6 +55,10 @@ public class ContractController {
     	web3j.ethSendTransaction(transaction).send();
     	EthGetBalance balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
     	LOGGER.info("Balance: {}", balance.getBalance().longValue());
+    	
+    	EthAccounts accounts = web3j.ethAccounts().send();
+    	balance = web3j.ethGetBalance(accounts.getAccounts().get(ownerId), DefaultBlockParameterName.LATEST).send();
+    	LOGGER.info("Owner balance: {}", balance.getBalance().longValue());
     }
     
     @PostMapping
@@ -67,12 +73,22 @@ public class ContractController {
     
     @PostMapping("/process")
     public String processContract(@RequestBody pl.piomin.services.contract.model.Transaction transaction) throws Exception {
+    	EthAccounts accounts = web3j.ethAccounts().send();
     	Transactionfee contract = Transactionfee.load(transaction.getContract(), web3j, credentials, GAS_PRICE, GAS_LIMIT);
-    	String coinbase = web3j.ethCoinbase().send().getAddress();
-    	TransactionReceipt tr = contract.sendFee(coinbase, BigInteger.valueOf(transaction.getAmount())).send();
+    	LOGGER.info("Sending to: {}", accounts.getAccounts().get(ownerId));
+    	TransactionReceipt tr = contract.sendTrx(accounts.getAccounts().get(ownerId), BigInteger.valueOf(transaction.getAmount())).send();
     	LOGGER.info("Transaction receipt: from={}, to={}, gas={}", tr.getFrom(), tr.getTo(), tr.getGasUsed().intValue());
     	EthGetBalance balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
     	LOGGER.info("Current sender balance: {}", balance.getBalance().longValue());
+    	
+    	
+    	balance = web3j.ethGetBalance(tr.getTo(), DefaultBlockParameterName.LATEST).send();
+    	LOGGER.info("Owner balance: {}", balance.getBalance().longValue());
+    	balance = web3j.ethGetBalance(tr.getFrom(), DefaultBlockParameterName.LATEST).send();
+    	LOGGER.info("Sender balance: {}", balance.getBalance().longValue());
+    	
+    	LOGGER.info("Contract sender balance: {}", contract.getBalances().send().longValue());
+    	LOGGER.info("Contract owner balance: {}", contract.balances(accounts.getAccounts().get(ownerId)).send().longValue());
     	return tr.getTransactionHash();
     }
     

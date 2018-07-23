@@ -6,5 +6,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>contract-service</module>
+  	<module>transaction-service</module>
   </modules>
 </project>
