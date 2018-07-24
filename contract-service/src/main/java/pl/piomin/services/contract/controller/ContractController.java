@@ -24,6 +24,7 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthCoinbase;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -56,9 +57,9 @@ public class ContractController {
     	EthGetBalance balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
     	LOGGER.info("Balance: {}", balance.getBalance().longValue());
     	
-    	EthAccounts accounts = web3j.ethAccounts().send();
-    	balance = web3j.ethGetBalance(accounts.getAccounts().get(ownerId), DefaultBlockParameterName.LATEST).send();
-    	LOGGER.info("Owner balance: {}", balance.getBalance().longValue());
+//    	EthAccounts accounts = web3j.ethAccounts().send();
+//    	balance = web3j.ethGetBalance(accounts.getAccounts().get(ownerId), DefaultBlockParameterName.LATEST).send();
+//    	LOGGER.info("Owner balance: {}", balance.getBalance().longValue());
     }
     
     @PostMapping
