@@ -21,7 +21,7 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import pl.piomin.services.contract.model.Transactionfee2;
+import pl.piomin.services.contract.model.Transactionfee;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -55,7 +55,7 @@ public class ContractTest {
 	
 	@Test
 	public void testTransactionFeeContract() throws Exception {
-		Transactionfee2 contract = Transactionfee2.deploy(web3j, credentialsFrom, GAS_PRICE, GAS_LIMIT, "0xd7850bd94f189ce38ce5729052926094997de310", FEE).send();
+		Transactionfee contract = Transactionfee.deploy(web3j, credentialsFrom, GAS_PRICE, GAS_LIMIT, "0xd7850bd94f189ce38ce5729052926094997de310", FEE).send();
 		EthGetBalance balance = web3j.ethGetBalance(credentialsTo.getAddress(), DefaultBlockParameterName.LATEST).send();
 		EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, contract.getContractAddress());
     	LOGGER.info("Sending to: account={}, balance={}", "0xd7850bd94f189ce38ce5729052926094997de310", balance.getBalance().longValue());
