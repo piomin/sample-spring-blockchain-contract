@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.Flowable;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
@@ -23,14 +25,12 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://docs.web3j.io/command_line.html">web3j command line tools</a>,
- * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with web3j version 3.4.0.
@@ -48,9 +48,13 @@ public class Transactionfee extends Contract {
 
     public static final String FUNC_RECEIVER = "receiver";
 
-    public static final Event SENT_EVENT = new Event("Sent", 
-            Arrays.<TypeReference<?>>asList(),
-            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}, new TypeReference<Uint256>() {}, new TypeReference<Bool>() {}));
+    public static final Event SENT_EVENT = new Event("Sent",
+//            Arrays.<TypeReference<?>>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+            }, new TypeReference<Address>() {
+            }, new TypeReference<Uint256>() {
+            }, new TypeReference<Bool>() {
+            }));
     ;
 
     protected Transactionfee(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -62,49 +66,53 @@ public class Transactionfee extends Contract {
     }
 
     public RemoteCall<BigInteger> getReceiverBalance() {
-        final Function function = new Function(FUNC_GETRECEIVERBALANCE, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        final Function function = new Function(FUNC_GETRECEIVERBALANCE,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<BigInteger> balances(String param0) {
-        final Function function = new Function(FUNC_BALANCES, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(param0)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        final Function function = new Function(FUNC_BALANCES,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(param0)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<TransactionReceipt> sendTrx(BigInteger weiValue) {
         final Function function = new Function(
-                FUNC_SENDTRX, 
-                Arrays.<Type>asList(), 
+                FUNC_SENDTRX,
+                Arrays.<Type>asList(),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function, weiValue);
     }
 
     public RemoteCall<BigInteger> fee() {
-        final Function function = new Function(FUNC_FEE, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        final Function function = new Function(FUNC_FEE,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<String> receiver() {
-        final Function function = new Function(FUNC_RECEIVER, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+        final Function function = new Function(FUNC_RECEIVER,
+                Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public static RemoteCall<Transactionfee> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit, String _receiver, BigInteger _fee) {
-        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_receiver), 
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_receiver),
                 new org.web3j.abi.datatypes.generated.Uint256(_fee)));
         return deployRemoteCall(Transactionfee.class, web3j, credentials, gasPrice, gasLimit, BINARY, encodedConstructor);
     }
 
     public static RemoteCall<Transactionfee> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit, String _receiver, BigInteger _fee) {
-        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_receiver), 
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_receiver),
                 new org.web3j.abi.datatypes.generated.Uint256(_fee)));
         return deployRemoteCall(Transactionfee.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, encodedConstructor);
     }
@@ -124,10 +132,10 @@ public class Transactionfee extends Contract {
         return responses;
     }
 
-    public Observable<SentEventResponse> sentEventObservable(EthFilter filter) {
-        return web3j.ethLogObservable(filter).map(new Func1<Log, SentEventResponse>() {
-            @Override
-            public SentEventResponse call(Log log) {
+    public Flowable<SentEventResponse> sentEventObservable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(log -> {
+
+//            public SentEventResponse call(Log log) {
                 Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(SENT_EVENT, log);
                 SentEventResponse typedResponse = new SentEventResponse();
                 typedResponse.log = log;
@@ -136,11 +144,11 @@ public class Transactionfee extends Contract {
                 typedResponse.amount = (BigInteger) eventValues.getNonIndexedValues().get(2).getValue();
                 typedResponse.sent = (Boolean) eventValues.getNonIndexedValues().get(3).getValue();
                 return typedResponse;
-            }
+//            }
         });
     }
 
-    public Observable<SentEventResponse> sentEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+    public Flowable<SentEventResponse> sentEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(SENT_EVENT));
         return sentEventObservable(filter);

@@ -16,15 +16,15 @@ public class ContractController {
 
     @Autowired
     ContractService service;
-    
+
     @GetMapping("/owner")
     public String getOwnerAccount() {
-    	return service.getOwnerAccount();
+        return service.getOwnerAccount();
     }
-    
+
     @PostMapping
     public Contract createContract(@RequestBody Contract newContract) throws Exception {
-    	return service.createContract(newContract);
+        return service.createContract(newContract);
     }
-    
+
 }
