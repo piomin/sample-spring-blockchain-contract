@@ -23,6 +23,9 @@ jobs:
             java -version
             export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
       - run:
+          name: Generate Sources
+          command: mvn web3j:generate-sources
+      - run:
           name: Maven Tests
           command: mvn test
 

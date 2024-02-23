@@ -1,23 +1,12 @@
 package pl.piomin.services.contract.service;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.crypto.exception.CipherException;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
@@ -26,9 +15,18 @@ import org.web3j.protocol.core.methods.response.EthCoinbase;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-
 import pl.piomin.services.contract.model.Contract;
-import pl.piomin.services.contract.model.Transactionfee;
+import pl.piomin.services.contract.model.TransactionFee;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContractService {
@@ -44,7 +42,7 @@ public class ContractService {
     private List<String> contracts = new ArrayList<>();
 
     @PostConstruct
-    public void init() throws IOException, CipherException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    public void init() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, CipherException {
         String file = WalletUtils.generateLightNewWalletFile(PASSWORD, null);
         credentials = WalletUtils.loadCredentials(PASSWORD, file);
         LOGGER.info("Credentials created: file={}, address={}", file, credentials.getAddress());
@@ -64,7 +62,7 @@ public class ContractService {
         String file = WalletUtils.generateLightNewWalletFile(PASSWORD, null);
         Credentials receiverCredentials = WalletUtils.loadCredentials(PASSWORD, file);
         LOGGER.info("Credentials created: file={}, address={}", file, credentials.getAddress());
-        Transactionfee contract = Transactionfee.deploy(web3j, credentials, GAS_PRICE, GAS_LIMIT, receiverCredentials.getAddress(), BigInteger.valueOf(newContract.getFee())).send();
+        TransactionFee contract = TransactionFee.deploy(web3j, credentials, GAS_PRICE, GAS_LIMIT, receiverCredentials.getAddress(), BigInteger.valueOf(newContract.getFee())).send();
         newContract.setReceiver(receiverCredentials.getAddress());
         newContract.setAddress(contract.getContractAddress());
         contracts.add(contract.getContractAddress());
@@ -78,7 +76,7 @@ public class ContractService {
 
     public void processContracts(long transactionAmount) {
         contracts.forEach(it -> {
-            Transactionfee contract = Transactionfee.load(it, web3j, credentials, GAS_PRICE, GAS_LIMIT);
+            TransactionFee contract = TransactionFee.load(it, web3j, credentials, GAS_PRICE, GAS_LIMIT);
             try {
                 TransactionReceipt tr = contract.sendTrx(BigInteger.valueOf(transactionAmount)).send();
                 LOGGER.info("Transaction receipt: from={}, to={}, gas={}", tr.getFrom(), tr.getTo(), tr.getGasUsed().intValue());
