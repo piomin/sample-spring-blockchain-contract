@@ -19,7 +19,7 @@
         <sonar.organization>piomin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <testcontainers.version>1.19.6</testcontainers.version>
-        <web3j.version>4.11.0</web3j.version>
+        <web3j.version>4.10.0</web3j.version>
     </properties>
 
     <modules>
@@ -35,9 +35,9 @@
                 <version>4.11.0</version>
                 <configuration>
                     <packageName>pl.piomin.services.contract.model</packageName>
-                    <sourceDestination>src/main/generated</sourceDestination>
+                    <sourceDestination>contract-service/src/main/generated</sourceDestination>
                     <soliditySourceFiles>
-                        <directory>src/main/resources</directory>
+                        <directory>contract-service/src/main/resources</directory>
                         <includes>
                             <include>**/*.sol</include>
                         </includes>

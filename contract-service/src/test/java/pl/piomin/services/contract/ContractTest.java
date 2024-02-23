@@ -24,7 +24,6 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import pl.piomin.services.contract.model.TransactionFee;
-import pl.piomin.services.contract.model.Transactionfee;
 
 import java.math.BigInteger;
 
@@ -73,7 +72,7 @@ public class ContractTest {
     public void testTransactionFeeContract() throws Exception {
         long chainId = 56;
         TransactionManager txManager = new RawTransactionManager(web3j, credentialsFrom, chainId);
-        TransactionFee contract = TransactionFee.deploy(web3j, txManager, GAS_PRICE, GAS_LIMIT, "0xd7850bd94f189ce38ce5729052926094997de310", FEE).send();
+        TransactionFee contract = TransactionFee.deploy(web3j, credentialsFrom, GAS_PRICE, GAS_LIMIT, "0xd7850bd94f189ce38ce5729052926094997de310", FEE).send();
         EthGetBalance balance = web3j.ethGetBalance(credentialsTo.getAddress(), DefaultBlockParameterName.LATEST).send();
         EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, contract.getContractAddress());
         LOGGER.info("Sending to: account={}, balance={}", "0xd7850bd94f189ce38ce5729052926094997de310", balance.getBalance().longValue());
