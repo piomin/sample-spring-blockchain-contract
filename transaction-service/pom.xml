@@ -7,7 +7,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>transaction-service</artifactId>
-    <groupId>pl.piomin.services</groupId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -17,8 +16,23 @@
     <dependencies>
         <dependency>
             <groupId>org.web3j</groupId>
-            <artifactId>web3j-spring-boot-starter</artifactId>
-            <version>1.6.0</version>
+            <artifactId>core</artifactId>
+            <version>${web3j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>tuples</artifactId>
+            <version>${web3j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>abi</artifactId>
+            <version>${web3j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>crypto</artifactId>
+            <version>${web3j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
