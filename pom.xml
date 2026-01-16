@@ -32,7 +32,7 @@
             <plugin>
                 <groupId>org.web3j</groupId>
                 <artifactId>web3j-maven-plugin</artifactId>
-                <version>4.11.0</version>
+                <version>4.14.0</version>
                 <configuration>
                     <packageName>pl.piomin.services.contract.model</packageName>
                     <sourceDestination>contract-service/src/main/generated</sourceDestination>
