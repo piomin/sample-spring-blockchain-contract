@@ -14,12 +14,12 @@
     <packaging>pom</packaging>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <sonar.projectKey>piomin_sample-spring-blockchain-contract</sonar.projectKey>
         <sonar.organization>piomin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <testcontainers.version>1.19.6</testcontainers.version>
-        <web3j.version>4.10.0</web3j.version>
+        <web3j.version>5.0.0</web3j.version>
     </properties>
 
     <modules>
@@ -32,7 +32,7 @@
             <plugin>
                 <groupId>org.web3j</groupId>
                 <artifactId>web3j-maven-plugin</artifactId>
-                <version>4.11.0</version>
+                <version>4.11.1</version>
                 <configuration>
                     <packageName>pl.piomin.services.contract.model</packageName>
                     <sourceDestination>contract-service/src/main/generated</sourceDestination>
